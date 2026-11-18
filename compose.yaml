@@ -1,0 +1,16 @@
+services:
+  redlib:
+    # Replace <github-user> with your GitHub username (lowercase)
+    image: ghcr.io/<github-user>/redlib-voyager:latest
+    restart: always
+    container_name: redlib
+    ports:
+      # Only reachable from this machine; put a reverse proxy or Tailscale in front.
+      # Use "8080:8080" instead to reach it directly from your local network.
+      - 127.0.0.1:8080:8080
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    env_file: .env

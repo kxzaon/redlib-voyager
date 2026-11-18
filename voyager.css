@@ -1,0 +1,1034 @@
+/* Voyager theme: light, iOS-like look inspired by the Voyager client for Lemmy.
+   Every selector starts with ".voyager " (dot, name, space): Redlib copies
+   theme files into light-/dark- variants by rewriting exactly that prefix. */
+
+.voyager {
+    --accent: #007aff;
+    --green: #34c759;
+    --text: #000;
+    --foreground: #e5e5ea;
+    --background: #f2f2f7;
+    --outside: #fff;
+    --post: #fff;
+    --panel-border: 0;
+    --highlighted: #e9e9eb;
+    --visited: #8e8e93;
+    --shadow: none;
+    --popup: #007aff;
+    --spoiler: #3c3c43;
+    --nsfw: #ff3b30;
+    --admin: #ff3b30;
+
+    --vy-secondary: #8e8e93;
+    --vy-separator: rgba(60, 60, 67, 0.2);
+    --vy-fill: rgba(118, 118, 128, 0.12);
+    --vy-bar: rgba(249, 249, 249, 0.92);
+    --vy-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, "Segoe UI", system-ui, sans-serif;
+
+    color-scheme: light;
+    font-size: 16px;
+    padding-bottom: 50px;
+}
+
+/* System font everywhere, as on iOS/Android */
+.voyager *,
+.voyager *::before,
+.voyager *::after {
+    font-family: var(--vy-font);
+}
+
+.voyager ::selection {
+    color: #fff;
+    background: var(--accent);
+}
+
+/* ---------- Top bar ---------- */
+
+.voyager nav {
+    background: var(--vy-bar);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 0.5px solid var(--vy-separator);
+    box-shadow: none;
+    font-size: 17px;
+}
+
+.voyager nav #redlib {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.voyager nav #red {
+    color: var(--accent);
+}
+
+.voyager nav #links svg {
+    stroke: var(--accent);
+}
+
+.voyager nav #links a {
+    color: var(--accent);
+}
+
+.voyager #feeds {
+    border: 0;
+    background: transparent;
+    margin-left: 6px;
+}
+
+.voyager #feeds > summary {
+    color: var(--accent);
+    padding: 6px 10px;
+    list-style: none;
+    font-weight: 500;
+}
+
+.voyager #feeds > summary::-webkit-details-marker {
+    display: none;
+}
+
+.voyager #feeds > summary::after {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-left: 7px;
+    border-right: 2px solid var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transform: translateY(-3px) rotate(45deg);
+}
+
+.voyager #feeds[open] > summary::after {
+    transform: translateY(1px) rotate(-135deg);
+}
+
+.voyager #feed_list {
+    border-radius: 14px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+    max-height: 70vh;
+    min-width: 230px;
+}
+
+.voyager #feed_list > p {
+    font-size: 13px;
+    color: var(--vy-secondary);
+    opacity: 1;
+    letter-spacing: 0.02em;
+}
+
+.voyager #feed_list > a {
+    padding: 11px 20px;
+    border-bottom: 0.5px solid var(--vy-separator);
+}
+
+.voyager #feed_list > .selected {
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Search field like an iOS search bar */
+.voyager #searchbox {
+    box-shadow: none;
+    border-radius: 10px;
+    background: var(--vy-fill);
+    overflow: hidden;
+}
+
+.voyager #searchbox:focus-within {
+    outline: 0;
+}
+
+.voyager #searchbox > *,
+.voyager #searchbox #search {
+    background: transparent;
+    border: 0;
+    height: 36px;
+}
+
+.voyager #searchbox #search {
+    padding-left: 34px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.4' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M20 20l-3.5-3.5'/></svg>") no-repeat 10px 50% / 16px;
+}
+
+.voyager #searchbox #search::placeholder {
+    color: var(--vy-secondary);
+}
+
+.voyager #inside {
+    border: 0;
+    font-size: 14px;
+    color: var(--vy-secondary);
+}
+
+.voyager #searchbox button.submit svg {
+    stroke: var(--accent);
+}
+
+/* ---------- Sort bar: iOS segmented control ---------- */
+
+.voyager #sort {
+    margin: 0 12px 10px;
+}
+
+.voyager #sort_options {
+    background: var(--vy-fill);
+    border-radius: 9px;
+    box-shadow: none;
+    padding: 2px;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.voyager #sort_options > a {
+    flex: 1;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.voyager #sort_options > a.selected {
+    background: #fff;
+    color: var(--text);
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
+}
+
+.voyager #sort_options > a:not(.selected):hover {
+    background: transparent;
+    text-decoration: none;
+}
+
+.voyager #timeframe,
+.voyager #sort select {
+    background: var(--vy-fill);
+    border-radius: 9px;
+    margin-left: 6px;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 0 12px;
+}
+
+.voyager #sort_submit,
+.voyager #comment_search_submit {
+    background: transparent;
+}
+
+.voyager #sort_submit svg,
+.voyager #comment_search_submit svg {
+    stroke: var(--accent);
+}
+
+.voyager #search_sort > *,
+.voyager .search_widget_divider_box > * {
+    background: var(--vy-fill);
+}
+
+.voyager #multisub,
+.voyager button.subscribe,
+.voyager button.unsubscribe,
+.voyager button.filter,
+.voyager button.unfilter {
+    background: transparent;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 4px 12px 12px;
+    border: 0;
+    border-radius: 9px;
+}
+
+.voyager #sub_actions button {
+    background: var(--vy-fill);
+    padding: 8px 16px;
+}
+
+/* ---------- Layout: edge to edge on phones ---------- */
+
+.voyager main {
+    padding-bottom: 2em;
+}
+
+.voyager #column_one {
+    border-radius: 0;
+}
+
+@media screen and (max-width: 800px) {
+    .voyager main {
+        padding: 10px 0 0;
+        margin: 0;
+    }
+}
+
+/* ---------- Posts in a feed ---------- */
+
+.voyager .post {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--post);
+    margin: 0;
+    transition: background 0.15s;
+    grid-template:
+        "post_title       post_title        post_thumbnail" auto
+        "post_media       post_media        post_media" auto
+        "post_body        post_body         post_body" auto
+        "post_poll        post_poll         post_poll" auto
+        "post_notification post_notification post_notification" auto
+        "post_header      post_header       post_header" auto
+        "post_score       post_footer       post_footer" auto
+        / auto minmax(0, 1fr) auto;
+}
+
+.voyager .post:not(:last-child) {
+    margin-bottom: 0;
+}
+
+.voyager #posts > .post + .sep + .post,
+.voyager #posts > .sep:not(:first-child) + .post {
+    border-top: 8px solid var(--background);
+}
+
+.voyager .post:hover {
+    background: var(--post);
+}
+
+.voyager .post:not(.highlighted):active {
+    background: #f7f7f7;
+}
+
+.voyager .post_title {
+    margin: 12px 14px 0;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.voyager .post:not(.highlighted) .post_title a:visited {
+    color: var(--visited);
+}
+
+.voyager .post_flair {
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    vertical-align: 2px;
+    margin-right: 6px;
+}
+
+.voyager .nsfw,
+.voyager .spoiler {
+    border-radius: 6px;
+    padding: 1px 5px;
+    font-size: 11px;
+    vertical-align: 3px;
+}
+
+/* Media: full width, no fade, no rounded box */
+.voyager .post_media_content,
+.voyager .gallery {
+    max-width: 100%;
+    margin: 10px 0 0;
+}
+
+.voyager .post_media_image img,
+.voyager .post_media_image.short img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: cover;
+    object-position: top;
+    margin: 0;
+}
+
+.voyager .post.highlighted .post_media_image img {
+    max-height: none;
+    object-fit: contain;
+}
+
+.voyager .post_media_video {
+    -webkit-mask-image: none;
+    mask-image: none;
+    opacity: 1;
+    max-height: 80vh;
+    background: #000;
+}
+
+.voyager .post_media_video[style] {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Link posts: small rounded preview next to the title */
+.voyager .post_thumbnail {
+    margin: 12px 14px 0 0;
+    width: 72px;
+    height: 72px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--vy-fill);
+}
+
+.voyager .post_thumbnail div {
+    width: 100%;
+    height: 100%;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.voyager .post_thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.voyager .post_thumbnail.no_thumbnail {
+    background: var(--vy-fill);
+}
+
+.voyager .post_thumbnail.no_thumbnail svg {
+    stroke: var(--vy-secondary);
+    width: 46px;
+}
+
+.voyager .post_thumbnail span {
+    font-size: 10px;
+    padding: 3px 4px;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.voyager #post_url {
+    margin: 10px 14px 0;
+    padding: 12px 14px;
+    background: var(--vy-fill);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+/* Text preview: three grey lines */
+.voyager .post_body {
+    width: auto;
+    padding: 0;
+    margin: 6px 14px 0;
+    opacity: 1;
+    line-height: 1.45;
+}
+
+.voyager .post_preview {
+    color: var(--vy-secondary);
+    font-size: 15px;
+    max-height: 4.4em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
+    mask-image: linear-gradient(180deg, #000 55%, transparent);
+}
+
+.voyager .post_preview:empty,
+.voyager .post_preview:not(:has(*)) {
+    display: none;
+}
+
+.voyager .post_preview p {
+    margin: 0;
+}
+
+.voyager .post_preview,
+.voyager .post_preview * {
+    color: var(--vy-secondary);
+}
+
+/* Meta line: r/sub · u/author · 3h */
+.voyager .post_header {
+    margin: 10px 14px 0;
+    line-height: 1.35;
+    font-size: 14px;
+    color: var(--vy-secondary);
+}
+
+.voyager .post_header * {
+    color: var(--vy-secondary);
+}
+
+.voyager .post_subreddit {
+    color: var(--text) !important;
+    font-weight: 500;
+}
+
+.voyager .post_header .dot {
+    opacity: 1;
+    font-size: 14px;
+}
+
+.voyager .created {
+    opacity: 1;
+    color: var(--vy-secondary);
+}
+
+/* Bottom row: ↑ score   💬 comments */
+.voyager .post_score {
+    grid-area: post_score;
+    margin: 8px 0 12px 14px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--vy-secondary);
+    text-align: left;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.voyager .post_score::before {
+    content: "";
+    width: 15px;
+    height: 15px;
+    margin-right: 4px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M12 19V5M5 12l7-7 7 7'/></svg>") no-repeat center / contain;
+}
+
+.voyager .post_footer {
+    grid-area: post_footer;
+    margin: 8px 14px 12px 16px;
+    opacity: 1;
+    font-size: 14px;
+    color: var(--vy-secondary);
+    align-items: center;
+}
+
+.voyager .post_comments {
+    font-weight: 500;
+    color: var(--vy-secondary);
+    display: inline-flex;
+    align-items: center;
+}
+
+.voyager .post_comments::before {
+    content: "";
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.2' stroke-linejoin='round'><path d='M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z'/></svg>") no-repeat center / contain;
+}
+
+/* Pinned posts: green title, no frame */
+.voyager .stickied {
+    border: 0;
+    --accent: var(--accent);
+}
+
+.voyager .stickied .post_title a {
+    color: #248a3d;
+}
+
+.voyager .stickied .post_title::before {
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    vertical-align: -1px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23248a3d'><path d='M16 3l5 5-3 1-4 4 1 5-2 2-4-4-5 5-1-1 5-5-4-4 2-2 5 1 4-4z'/></svg>") no-repeat center / contain;
+}
+
+/* Pagination */
+.voyager main > * > footer {
+    margin: 16px 12px 0;
+    gap: 10px;
+}
+
+.voyager main > * > footer > a {
+    flex: 1;
+    margin: 0;
+    background: var(--post);
+    color: var(--accent);
+    border-radius: 12px;
+    box-shadow: none;
+    font-weight: 600;
+    justify-content: center;
+    padding: 13px;
+}
+
+.voyager main > * > footer > a:hover {
+    background: var(--post);
+    text-decoration: none;
+}
+
+/* ---------- Opened post ---------- */
+
+.voyager .post.highlighted {
+    margin-bottom: 8px;
+}
+
+.voyager .post.highlighted .post_title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 14px;
+}
+
+.voyager .post.highlighted .post_body {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.voyager .post.highlighted .post_body p {
+    margin: 0 0 0.8em;
+}
+
+.voyager .post.highlighted .post_body p:last-child {
+    margin-bottom: 0;
+}
+
+.voyager .post.highlighted .post_body a,
+.voyager .comment_body a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.voyager .post.highlighted .post_footer {
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+.voyager #post_links {
+    font-weight: 500;
+    margin-right: auto;
+}
+
+.voyager .post_footer > p,
+.voyager .post_footer > p span {
+    color: var(--vy-secondary);
+}
+
+.voyager #post_links a {
+    color: var(--accent);
+}
+
+.voyager .author_flair {
+    background: var(--vy-fill);
+    color: var(--vy-secondary);
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0 4px;
+}
+
+.voyager .gallery figure {
+    margin: 0 0 6px;
+}
+
+.voyager .gallery figcaption {
+    margin: 4px 14px;
+    color: var(--vy-secondary);
+    font-size: 14px;
+}
+
+.voyager .gallery figcaption:not(:has(p:not(:empty))) {
+    display: none;
+}
+
+/* Comment count / sort / search */
+.voyager #commentQueryForms {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 12px 2px;
+    background: var(--post);
+    border-bottom: 0.5px solid var(--vy-separator);
+}
+
+.voyager #commentQueryForms #sort {
+    margin: 0;
+}
+
+.voyager #comment_count {
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 1;
+    flex: 1;
+}
+
+.voyager #comment_count > #sorted_by {
+    color: var(--vy-secondary);
+    opacity: 1;
+    font-weight: 400;
+}
+
+.voyager #sort:has(.commentQuery) {
+    background: var(--vy-fill);
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.voyager #sort:has(.commentQuery):focus-within {
+    outline: 0;
+}
+
+.voyager .commentQuery,
+.voyager #search.commentQuery {
+    background: transparent;
+    border: 0;
+    height: 36px;
+    flex: 1;
+}
+
+.voyager #commentSortSelect {
+    padding-right: 30px;
+    background: var(--vy-fill) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007aff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center / 14px;
+}
+
+/* ---------- Comments ---------- */
+
+.voyager #comments {
+    background: var(--post);
+    padding-bottom: 12px;
+}
+
+.voyager .thread {
+    border-bottom: 0.5px solid var(--vy-separator);
+}
+
+.voyager .thread_nav {
+    margin: 0;
+    padding: 12px 14px;
+    font-weight: 500;
+    border-bottom: 0.5px solid var(--vy-separator);
+}
+
+.voyager .comment {
+    display: block;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* Score moves to the right of the header row; the left column goes away */
+.voyager .comment_left {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.voyager .comment_score {
+    background: none;
+    color: var(--vy-secondary);
+    min-width: 0;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.voyager .comment_score::before {
+    content: "";
+    width: 13px;
+    height: 13px;
+    margin-right: 3px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='M12 19V5M5 12l7-7 7 7'/></svg>") no-repeat center / contain;
+}
+
+.voyager .comment .line,
+.voyager .comment_collapse {
+    display: none;
+}
+
+.voyager .comment_right {
+    display: block;
+    padding: 0;
+    position: static;
+}
+
+.voyager summary.comment_data {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+    margin: 0;
+    padding: 10px 70px 4px 14px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.voyager summary.comment_data::-webkit-details-marker,
+.voyager summary.comment_data::marker {
+    display: none;
+    content: "";
+}
+
+.voyager .comment:has([id]) .comment_data > * {
+    margin: 0;
+}
+
+.voyager .comment_author {
+    margin: 0;
+    font-weight: 600;
+    opacity: 1;
+    color: var(--text);
+}
+
+.voyager .comment_author.op {
+    color: var(--accent);
+}
+
+.voyager .comment_author.op::after {
+    content: "OP";
+    margin-left: 5px;
+    padding: 0 4px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--accent);
+    vertical-align: 1px;
+}
+
+.voyager .comment_author.moderator {
+    color: #248a3d;
+}
+
+.voyager .comment_author.admin {
+    color: var(--admin);
+}
+
+.voyager .comment_data .created {
+    color: var(--vy-secondary);
+    font-size: 13px;
+}
+
+.voyager .edited {
+    font-size: 12px;
+    color: var(--vy-secondary);
+    opacity: 1;
+}
+
+.voyager .comment_body,
+.voyager .comment_body_filtered {
+    margin: 0;
+    padding: 0 14px 10px;
+    font-size: 15px;
+    line-height: 1.45;
+    opacity: 1;
+}
+
+.voyager .comment_body p {
+    margin: 0 0 0.6em;
+}
+
+.voyager .comment_body p:last-child,
+.voyager .comment_body > p:not(:first-child):last-child {
+    margin-bottom: 0;
+}
+
+.voyager .comment_body > p:not(:first-child) {
+    margin-top: 0;
+}
+
+.voyager .comment_body.highlighted {
+    background: rgba(0, 122, 255, 0.08);
+}
+
+.voyager .comment_body blockquote {
+    margin: 0.4em 0;
+    padding-left: 10px;
+    border-left: 3px solid var(--foreground);
+    color: var(--vy-secondary);
+}
+
+/* Collapsed comment: dimmed header with a chevron */
+.voyager .comment_right:not([open]) > summary.comment_data {
+    padding-bottom: 10px;
+    opacity: 0.6;
+}
+
+.voyager .comment_right:not([open]) > summary.comment_data::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    margin-left: 4px;
+    border-right: 2px solid var(--vy-secondary);
+    border-bottom: 2px solid var(--vy-secondary);
+    transform: rotate(-45deg);
+}
+
+/* Replies: indented, coloured bar per depth like Voyager */
+.voyager .replies {
+    margin: 0 0 0 14px;
+    padding: 0;
+}
+
+.voyager .replies:empty,
+.voyager .replies:not(:has(*)) {
+    display: none;
+}
+
+.voyager .replies > .comment {
+    margin: 0;
+    padding: 0;
+    border-left: 2px solid #ff3b30;
+    border-top: 0.5px solid var(--vy-separator);
+}
+
+.voyager .replies .replies > .comment { border-left-color: #ff9500; }
+.voyager .replies .replies .replies > .comment { border-left-color: #ffcc00; }
+.voyager .replies .replies .replies .replies > .comment { border-left-color: #34c759; }
+.voyager .replies .replies .replies .replies .replies > .comment { border-left-color: #007aff; }
+.voyager .replies .replies .replies .replies .replies .replies > .comment { border-left-color: #af52de; }
+.voyager .replies .replies .replies .replies .replies .replies .replies > .comment { border-left-color: #ff3b30; }
+
+.voyager .replies > .comment > .comment_right > summary.comment_data {
+    padding-left: 10px;
+}
+
+.voyager .replies > .comment > .comment_right > .comment_body {
+    padding-left: 10px;
+}
+
+.voyager .replies .replies {
+    margin-left: 10px;
+}
+
+.voyager .deeper_replies {
+    display: block;
+    margin: 0;
+    padding: 8px 14px 10px 10px;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.voyager .comment img {
+    border-radius: 8px;
+}
+
+/* ---------- Subreddit / user panel ---------- */
+
+.voyager .panel,
+.voyager #subreddit,
+.voyager #user,
+.voyager #sidebar {
+    background: var(--post);
+    border: 0;
+    border-radius: 12px;
+}
+
+@media screen and (max-width: 800px) {
+    .voyager aside {
+        margin: 0 12px 12px;
+    }
+
+    .voyager #subreddit,
+    .voyager #sidebar {
+        margin: 0 0 12px;
+    }
+}
+
+.voyager #sub_meta,
+.voyager #user {
+    padding: 16px;
+}
+
+.voyager #subreddit_label,
+.voyager #sidebar_label {
+    padding: 10px;
+    color: var(--vy-secondary);
+    font-size: 13px;
+}
+
+.voyager #sub_icon,
+.voyager .default_sub_icon {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* Compact community header instead of a big card */
+.voyager #sub_icon {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    margin: 0 0 8px;
+    border: 0;
+    font-size: 20px;
+    object-fit: cover;
+}
+
+.voyager #sub_title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.voyager #sub_description {
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+.voyager #sub_details {
+    margin: 4px 0 10px;
+    font-size: 14px;
+}
+
+.voyager #sub_details > div {
+    font-weight: 600;
+}
+
+.voyager #sub_actions button {
+    padding: 7px 14px;
+    font-size: 14px;
+}
+
+.voyager #sub_name,
+.voyager #sub_details label {
+    color: var(--vy-secondary);
+}
+
+/* ---------- Settings ---------- */
+
+.voyager #settings .prefs,
+.voyager #settings details,
+.voyager #settings_subs {
+    background: var(--post);
+    border-radius: 12px;
+    border: 0;
+}
+
+.voyager input[type="submit"] {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 10px;
+}
+
+/* ---------- Page footer ---------- */
+
+.voyager > footer {
+    background: transparent;
+    font-size: 12px;
+    color: var(--vy-secondary);
+}
+
+.voyager .footer-buttons,
+.voyager .footer-buttons * {
+    color: var(--vy-secondary);
+}
+
+.voyager .footer-buttons svg {
+    fill: var(--vy-secondary);
+    stroke: none;
+}
