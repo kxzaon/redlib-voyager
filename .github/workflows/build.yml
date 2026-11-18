@@ -1,0 +1,104 @@
+name: Build redlib-voyager
+
+# Builds Nachtalb's Redlib fork with the Voyager theme added, and publishes
+# it as ghcr.io/<you>/<this repo>. Checks upstream every day and only
+# rebuilds when upstream or this repository changed.
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Rebuild even if this version already exists"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - "voyager.css"
+      - ".github/workflows/build.yml"
+
+concurrency:
+  group: build
+  cancel-in-progress: true
+
+env:
+  UPSTREAM: Nachtalb/redlib
+  # Override with a repository variable named PLATFORMS, e.g. "linux/arm64"
+  # for a Raspberry Pi only: one platform builds about twice as fast.
+  PLATFORMS: ${{ vars.PLATFORMS || 'linux/amd64,linux/arm64' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Find upstream version
+        id: prep
+        run: |
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          up_sha=$(git ls-remote "https://github.com/$UPSTREAM" refs/heads/main | cut -f1)
+          test -n "$up_sha"
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+          echo "up_sha=$up_sha" >> "$GITHUB_OUTPUT"
+          echo "tag=up-${up_sha::7}-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skip if already built
+        id: check
+        run: |
+          if [ "${{ inputs.force }}" != "true" ] && docker manifest inspect "${{ steps.prep.outputs.image }}:${{ steps.prep.outputs.tag }}" > /dev/null 2>&1; then
+            echo "Already built: ${{ steps.prep.outputs.tag }}"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout this repository
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/checkout@v7
+        with:
+          path: theme
+
+      - name: Checkout Redlib
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ env.UPSTREAM }}
+          ref: ${{ steps.prep.outputs.up_sha }}
+          path: redlib
+
+      - name: Add the Voyager theme
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          cp theme/voyager.css redlib/static/themes/voyager.css
+          # Light status bar when installed on the home screen (no-op if upstream changes these lines)
+          sed -i 's/content="#1F1F1F"/content="#F9F9F9"/' redlib/templates/base.html
+          sed -i 's/"#1f1f1f"/"#f2f2f7"/g' redlib/static/manifest.json
+
+      - name: Set up Docker Buildx
+        if: steps.check.outputs.skip != 'true'
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push
+        if: steps.check.outputs.skip != 'true'
+        uses: docker/build-push-action@v7
+        with:
+          context: redlib
+          file: redlib/Dockerfile.distroless
+          platforms: ${{ env.PLATFORMS }}
+          build-args: |
+            GIT_HASH=${{ steps.prep.outputs.up_sha }}
+          tags: |
+            ${{ steps.prep.outputs.image }}:latest
+            ${{ steps.prep.outputs.image }}:${{ steps.prep.outputs.tag }}
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max,ignore-error=true
