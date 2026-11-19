@@ -165,62 +165,134 @@
     stroke: var(--accent);
 }
 
-/* ---------- Sort bar: iOS segmented control ---------- */
+/* ---------- Sort bar: text tabs with a short underline ---------- */
 
 .voyager #sort {
-    margin: 0 12px 10px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-bottom: 10px;
 }
 
-.voyager #sort_options {
-    background: var(--vy-fill);
-    border-radius: 9px;
+/* Feed sort (not the comment forms, which also use id="sort") */
+.voyager #sort:has(> #sort_options) {
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 8px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 8px;
+    padding: 0 10px;
+    background: var(--post);
+    border-bottom: 0.5px solid var(--vy-separator);
+}
+
+.voyager #sort > #sort_options {
+    flex: 1 1 100%;
+    height: 46px;
+    justify-content: space-between;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
     box-shadow: none;
-    padding: 2px;
-    flex: 1;
     overflow-x: auto;
     scrollbar-width: none;
 }
 
-.voyager #sort_options > a {
-    flex: 1;
-    padding: 6px 10px;
-    border-radius: 7px;
-    font-size: 13px;
+.voyager #sort > #sort_options > a {
+    flex: 0 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 6px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    font-size: 15px;
     font-weight: 500;
-    color: var(--text);
+    color: var(--vy-secondary);
 }
 
-.voyager #sort_options > a.selected {
-    background: #fff;
+.voyager #sort > #sort_options > a.selected {
+    background: transparent;
     color: var(--text);
     font-weight: 600;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
 }
 
-.voyager #sort_options > a:not(.selected):hover {
+/* Indicator as wide as the word, not the whole slot */
+.voyager #sort > #sort_options > a.selected::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--accent);
+}
+
+.voyager #sort > #sort_options > a:not(.selected):hover {
     background: transparent;
+    text-decoration: none;
+    color: var(--text);
+}
+
+/* Top / Controversial: period on its own row, pill + round OK button */
+.voyager #sort > #timeframe {
+    flex: 0 0 auto;
+    height: 32px;
+    margin: 10px 0;
+    padding: 0 32px 0 14px;
+    border: 0;
+    /* !important: Redlib squares this corner with a 4-id selector */
+    border-radius: 16px !important;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--vy-fill) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 12px center / 12px;
+    text-transform: capitalize;
     text-decoration: none;
 }
 
-.voyager #timeframe,
+.voyager #sort > #sort_submit {
+    flex: 0 0 auto;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    margin: 10px 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.voyager #sort > #sort_submit svg {
+    stroke: #fff;
+    width: 14px;
+}
+
 .voyager #sort select {
-    background: var(--vy-fill);
+    background-color: var(--vy-fill);
     border-radius: 9px;
-    margin-left: 6px;
     color: var(--accent);
     font-weight: 500;
     font-size: 14px;
     padding: 0 12px;
 }
 
-.voyager #sort_submit,
 .voyager #comment_search_submit {
     background: transparent;
 }
 
-.voyager #sort_submit svg,
-.voyager #comment_search_submit svg {
+.voyager #comment_search_submit svg,
+.voyager #commentQueryForms #sort_submit svg {
     stroke: var(--accent);
+}
+
+.voyager #commentQueryForms #sort_submit {
+    background: transparent;
 }
 
 .voyager #search_sort > *,
@@ -516,6 +588,34 @@
     height: 15px;
     margin-right: 5px;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.2' stroke-linejoin='round'><path d='M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z'/></svg>") no-repeat center / contain;
+}
+
+/* Whole card opens the post: the title link is stretched over the card,
+   other links (sub, author, media, comments) stay on top of it */
+.voyager .post:not(.highlighted) {
+    position: relative;
+    cursor: pointer;
+}
+
+.voyager .post:not(.highlighted) .post_title > a:not(.post_flair)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.voyager .post:not(.highlighted) :is(.post_header a, .post_flair, .post_media_content, .post_thumbnail, .gallery, .post_body a, .post_footer a, .nsfw, .spoiler, .post_poll, .post_notification) {
+    position: relative;
+    z-index: 1;
+}
+
+/* The preview's fade mask puts it above the stretched link: let taps through */
+.voyager .post:not(.highlighted) .post_preview {
+    pointer-events: none;
+}
+
+.voyager .post:not(.highlighted) .post_preview a {
+    pointer-events: auto;
 }
 
 /* Pinned posts: green title, no frame */
